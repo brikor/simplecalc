@@ -25,9 +25,14 @@ import "package:unittest/html_enhanced_config.dart" show
 import "package:polymer/polymer.dart";
 import "package:simplecalc/rpncalc.dart";
 
-void main() {
+part "parser_test.dart";
+//use a seperate main method so all test methods can be executed in one main.
+void main(){
   //let the unit test package setup the html parts for us.
   useHtmlEnhancedConfiguration();
+  rpncalc_test();
+}
+void rpncalc_test() {
   initPolymer().run(() {
     return Polymer.onReady.then((_) {
       //The basic test group covers basic ui functionality
