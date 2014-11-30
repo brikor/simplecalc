@@ -93,7 +93,7 @@ void rpncalc_test() {
     });
 
     // no input creates no output
-    test('Blank Submit Outputs 0', () {
+    test('Blank Submit Outputs blank', () {
       calc.formula = "";
       return new Future(() {
         (shadow.querySelector("#calcbtn") as ButtonElement).click();
