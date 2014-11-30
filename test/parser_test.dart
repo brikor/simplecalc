@@ -16,3 +16,19 @@
   * along with simple calc.  If not, see <http://www.gnu.org/licenses/>.
 */
 part of rpn_test;
+
+//unit test the parser class.
+void parser_test() {
+  group('parser', () {
+    Parser p = new Parser();
+    test('Parser can be Instantiated', () {
+      expect(p.runtimeType, equals(Parser));
+    });
+    test("Parser.parse handles empty strings", () {
+      expect(p.parse(""), equals([""]));
+    });
+    test("Parser.parse handles simple strings", (){
+      expect(p.parse("10 10 +"), equals(["10","10","+"]));
+    });
+  });
+}

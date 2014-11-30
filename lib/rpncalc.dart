@@ -15,8 +15,11 @@
   * You should have received a copy of the GNU General Public License
   * along with simple calc.  If not, see <http://www.gnu.org/licenses/>.
 */
+library rpn;
+
 import 'package:polymer/polymer.dart';
 
+part "parser.dart";
 /**
  * A Polymer based rpn calculator.
  */
