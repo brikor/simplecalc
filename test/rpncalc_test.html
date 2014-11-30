@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+  * Copyright (c) 2014 Brian Korbein
+  * This file is part of simple calc.
+  *
+  * simple calc is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * simple calc is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with simple calc.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rpncalc_test</title>
+        <!-- include the web_components polyfills with support for Dart. -->
+    <script src="packages/web_components/platform.js"></script>
+    <script src="packages/web_components/dart_support.js"></script>
+    <!-- import the calculator component -->
+    <link rel="import" href="../packages/simplecalc/rpncalc.html">
+  </head>
+  <body>
+    <!-- merge in the rpn-calc component for testing... -->
+    <rpn-calc></rpn-calc>
+    <script type="application/dart" src="rpncalc_test.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
