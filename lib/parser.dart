@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright (c) 2014 Brian Korbein
   * This file is part of simple calc.
   *
@@ -23,7 +23,7 @@ part of rpn;
 class Parser {
   RegExp _reg;
   ///Contruct a new Parser, which pretty much just means construct the regex...
-  Parser(){
+  Parser() {
     //dart regex is supposed to be identical to js regex, and this works for js
     //so it should work here as well. This regex will match on any words,
     //numbers or symbols while ignoring whitespace
@@ -33,9 +33,9 @@ class Parser {
   ///order for consumption by the calculator. This list is unvalidated, and
   ///will generally attempt to not throw any exceptions. An empty uString will
   ///be returned as a list containing a single empty string.
-  List<String> parse(String uString){
+  List<String> parse(String uString) {
     List<String> rString;
-    if(uString.length == 0){
+    if (uString.length == 0) {
       rString = [""]; //create an list to return with a single empty string
     } else {
       rString = _rpnTokenize(uString);
@@ -44,15 +44,24 @@ class Parser {
   }
   //Private method to create the tokens, this should only be called on a string
   //that actually has values...
-  List<String> _rpnTokenize(String uString){
+  List<String> _rpnTokenize(String uString) {
     List<String> rString = new List<String>();
+    //remove any sugar...
+    uString = _deSugar(uString);
     var mat = _reg.allMatches(uString);
     //take the matches and blindly stuff them into the rString
-    mat.forEach((val){
+    mat.forEach((val) {
       //since we currently only have a single group in the matcher, we can just
       //hardcode the 0 here, since we'll never regret that...
       rString.add(val.group(0));
     });
     return rString;
+  }
+  //Private method to remove syntactic sugar, like inline negation
+  String _deSugar(String uString) {
+    //turn inline negation into <number> neg
+    return uString.replaceAllMapped(
+        new RegExp(r'(-)(\d+)'),
+        (Match m) => "${m[2]} neg");
   }
 }

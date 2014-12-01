@@ -19,7 +19,7 @@ part of rpn_test;
 
 //unit test the parser class.
 void parser_test() {
-  group('parser', () {
+  group('Parser', () {
     Parser p = new Parser();
     test('Parser can be Instantiated', () {
       expect(p.runtimeType, equals(Parser));
@@ -29,6 +29,9 @@ void parser_test() {
     });
     test("Parser.parse handles simple strings", (){
       expect(p.parse("10 10 +"), equals(["10","10","+"]));
+    });
+    test("Parser.parse handles negative numbers", (){
+      expect(p.parse("-1 -2 +"), equals(["1","neg","2","neg","+"]));
     });
   });
 }
