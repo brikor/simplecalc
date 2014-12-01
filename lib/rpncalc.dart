@@ -20,6 +20,7 @@ library rpn;
 import 'package:polymer/polymer.dart';
 
 part "parser.dart";
+part "calc.dart";
 /**
  * A Polymer based rpn calculator.
  */

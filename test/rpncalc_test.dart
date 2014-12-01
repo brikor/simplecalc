@@ -26,6 +26,7 @@ import "package:polymer/polymer.dart";
 import "package:simplecalc/rpncalc.dart";
 
 part "parser_test.dart";
+part "calc_test.dart";
 //use a seperate main method so all test methods can be executed in one main.
 void main() {
   //let the unit test package setup the html parts for us.
@@ -34,6 +35,7 @@ void main() {
     return Polymer.onReady.then((_) {
       rpncalc_test();
       parser_test();
+      calc_test();
     });
   });
 }
