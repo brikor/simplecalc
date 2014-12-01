@@ -53,6 +53,12 @@ void calc_test(){
   group('Math', (){
     test("Calc.calculate can add", (){
                 expect(c.calculate(["10","10","+"]), equals("20"));
-        });
+    });
+    test("Calc.calculate can negate", (){
+                expect(c.calculate(["10","neg"]), equals("-10"));
+    });
+    test("Calc.calculate can subtract ", (){
+                expect(c.calculate(["10","19","-"]), equals("-9"));
+    });
   });
 }

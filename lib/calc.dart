@@ -39,12 +39,24 @@ class Calc {
   Calc._internal(){
     /**
      * The Functions should take a list of numbers and return number, and throw
-     * if there are any issues. Beyond that, do what you want.
+     * if there are any issues. Beyond that, do what you want. It should be
+     * noted however that these opers are expected to be destructive, which is
+     * to say, the [tok] elements involved in the oper's calculation should be
+     * removed from [tok].
      */
 
     //"+", returns the sum of the previous two numbers
     _oper["+"] = (List<num> tok){
       return (tok.removeLast() + tok.removeLast());
+    };
+    _oper["-"] = (List<num> tok){
+      //the order of the nums matters here so...
+      num b = tok.removeLast();
+      num a = tok.removeLast();
+      return (a - b);
+    };
+    _oper["neg"] = (List<num> tok){
+      return -(tok.removeLast());
     };
   }
   ///calculate takes a list of rpn tokens (list of strings) and performs the
