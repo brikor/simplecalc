@@ -30,11 +30,17 @@ class RPNCalc extends PolymerElement {
   //since we only write to result, it can be just observable i think?
   @observable String result = '';
 
+  Parser par;
+  Calc cal;
 
   RPNCalc.created() : super.created() {
+    //initialize the parser and calculator so calculate can calculate
+    par = new Parser();
+    cal  = new Calc();
   }
-
+  ///Here we take the user inputted formula, pass it through a chain of methods
+  ///and give the result of the calculation back to the user.
   void calculate() {
-    result = formula;
+    result = cal.calculate(par.parse(formula));
   }
 }
