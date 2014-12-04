@@ -64,16 +64,6 @@ void rpncalc_test() {
           (shadow.querySelector("#formula") as TextAreaElement).value,
           equals("10"));
     });
-    //setting the text area to a value updates the bound variable
-    test('formula TextArea is bound to formula', () {
-      return new Future(() {
-        var tArea = shadow.querySelector("#formula") as TextAreaElement;
-        tArea.value = "10";
-        return new Future(() {
-          expect(calc.formula, equals(tArea.value));
-        });
-      });
-    });
     //input of 10 sets result to 10
     test('Submit sets result', () {
       calc.formula = "10";
