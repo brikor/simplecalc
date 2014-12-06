@@ -25,13 +25,20 @@ void parser_test() {
       expect(p.runtimeType, equals(Parser));
     });
     test("Parser.parse handles empty strings", () {
-      expect(p.parse(""), equals([""]));
+      expect(p.parse(""), equals([["string",""]]));
     });
     test("Parser.parse handles simple strings", (){
-      expect(p.parse("10 10 +"), equals(["10","10","+"]));
+      expect(p.parse("10 10 +"), equals([["num","10"],["num","10"],
+                                         ["oper","+"]]));
     });
+    test("Parser.parse handles string types", (){
+          expect(p.parse("\"hello,\" \" world!\" +"),
+              equals([["string","\"hello,\""],["string","\" world!\""],
+                                             ["oper","+"]]));
+        });
     test("Parser.parse handles negative numbers", (){
-      expect(p.parse("-1 -2 +"), equals(["1","neg","2","neg","+"]));
+      expect(p.parse("-1 -2 +"), equals([["num","1"],["oper","neg"],["num","2"],
+                                         ["oper","neg"],["oper","+"]]));
     });
   });
 }

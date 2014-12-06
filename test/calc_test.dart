@@ -31,34 +31,41 @@ void calc_test(){
         expect(c.calculate([]), equals(""));
       });
       test("Calc.calculate handles lists of empty string", () {
-        expect(c.calculate([""]), equals(""));
+        expect(c.calculate([["string",""]]), equals(""));
       });
       test("Calc.calculate handles lists of single values", () {
-        expect(c.calculate(["10"]), equals("10"));
+        expect(c.calculate([["num","10"]]), equals("10"));
       });
       //make sure to wrap calculate in a ()=> since the exception test
       //matchers can't handle methods with args.
       test("Calc.calculate throws on bad data", () {
-        expect(()=>c.calculate(["-"]), throwsFormatException);
+        expect(()=>c.calculate([["oper","-"]]), throwsException);
       });
+      //just catch the throw, since there's no good matcher
       test("Calc.calculate throws when you forget an operator", () {
-              expect(()=>c.calculate(["10","10","10"]), throwsStateError);
+              expect(()=>c.calculate([["num","10"],["num","10"],["num","10"]]), throws);
       });
+      //just catch the throw, there's no good matcher for no such operator
       test("Calc.calculate throws when you feed a bad operator, } in this case",
-          () { expect(()=>c.calculate(["10","10","}"]), throwsFormatException);
+          () { expect(()=>c.calculate([["num","10"],["num","10"],["oper","}"]]), throws);
       });
 
     });
   //tests for the various operators should go here
   group('Math', (){
     test("Calc.calculate can add", (){
-                expect(c.calculate(["10","10","+"]), equals("20"));
+                expect(c.calculate([["num","10"],["num","10"],["oper","+"]]), equals("20"));
+    });
+    test("Calc.calculate can add strings", (){
+                    expect(c.calculate([["string","\"hello,\""],
+                                        ["string","\" world!\""],["oper","+"]]),
+                                        equals("\"hello, world!\""));
     });
     test("Calc.calculate can negate", (){
-                expect(c.calculate(["10","neg"]), equals("-10"));
+                expect(c.calculate([["num","10"],["oper","neg"]]), equals("-10"));
     });
     test("Calc.calculate can subtract ", (){
-                expect(c.calculate(["10","19","-"]), equals("-9"));
+                expect(c.calculate([["num","10"],["num","19"],["oper","-"]]), equals("-9"));
     });
   });
 }
