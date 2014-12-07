@@ -39,8 +39,13 @@ class RPNCalc extends PolymerElement {
     cal  = new Calc();
   }
   ///Here we take the user inputted formula, pass it through a chain of methods
-  ///and give the result of the calculation back to the user.
+  ///and give the result of the calculation back to the user. Any exceptions
+  ///caused by the formula will be caught and displayed to the user here.
   void calculate() {
-    result = cal.calculate(par.parse(formula));
+    try {
+      result = cal.calculate(par.parse(formula));
+    } catch (e){
+      result = "Invalid Formula.";
+    }
   }
 }
