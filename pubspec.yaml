@@ -1,0 +1,11 @@
+name: simplecalc
+author: Brian Korbein
+description: A simple rpn calculator
+dependencies:
+  polymer: any
+  unittest: any
+transformers:
+- polymer:
+    entry_points:
+    - web/simplecalc.html
+    - test/rpncalc_test.html
