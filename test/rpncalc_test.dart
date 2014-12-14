@@ -27,15 +27,19 @@ import "package:simplecalc/rpncalc.dart";
 
 part "parser_test.dart";
 part "calc_test.dart";
+part "oper_test.dart";
+
 //use a seperate main method so all test methods can be executed in one main.
 void main() {
-  //let the unit test package setup the html parts for us.
+  //let the unit test package setup the pretty report, because lazy
+  //polymer init also has to happen here, or troubles everywhere.
   useHtmlEnhancedConfiguration();
   initPolymer().run(() {
     return Polymer.onReady.then((_) {
       rpncalc_test();
       parser_test();
       calc_test();
+      oper_test();
     });
   });
 }
