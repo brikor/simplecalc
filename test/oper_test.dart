@@ -67,6 +67,11 @@ void oper_test() {
           op.doCalc([["num", "1011.1111"], ["num", "9.2"], ["oper", "-"]], 2),
           equals([["num", "1001.9111"]]));
     });
+    test('minusoper can subtract numbers with no precision', () {
+      expect(
+          op.doCalc([["num", "10"], ["num", "9"], ["oper", "-"]], 2),
+          equals([["num", "1"]]));
+    });
     test('minusoper cannot handle strings', () {
       expect(
           () => op.doCalc([["string", '"1"'], ["string", '"1"'], ["oper", "-"]], 2),

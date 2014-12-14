@@ -40,10 +40,9 @@ class MinusOper implements Oper {
       //report back all the useful digits. There may be some accuracy issues
       //for numbers that are using a large fractional part, but I can't really
       //see a way around that save making my own non-ieee floats.
-      int prec = _getPrec(a,b);
-      res = [
-          "num",
-          (num.parse(a[VALUE]) - num.parse(b[VALUE])).toStringAsFixed(prec)];
+      int prec = _getPrec(a, b);
+      res =
+          ["num", (num.parse(a[VALUE]) - num.parse(b[VALUE])).toStringAsFixed(prec)];
     } else {
       throw new Exception("Invalid Calculation, ${a[VALUE]} - ${b[VALUE]}");
     }
@@ -52,12 +51,22 @@ class MinusOper implements Oper {
     return toks;
   }
   //returns the larger precision of the two numbers
-  int _getPrec(List<String> a, List<String> b){
+  int _getPrec(List<String> a, List<String> b) {
     //if we capture all characters after the '.' in a number, that should give
     //the precision. Yay regex, you solve all my problems.
     RegExp reg = new RegExp(r"\.(\d+)");
-    int aPrec = reg.allMatches(a[VALUE]).first.group(1).length;
-    int bPrec = reg.allMatches(b[VALUE]).first.group(1).length;
+    int aPrec;
+    int bPrec;
+    if (a[VALUE].contains(".")) {
+      aPrec = reg.allMatches(a[VALUE]).first.group(1).length;
+    } else {
+      aPrec = 0;
+    }
+    if (b[VALUE].contains(".")) {
+      bPrec = reg.allMatches(b[VALUE]).first.group(1).length;
+    } else {
+      bPrec = 0;
+    }
     return aPrec > bPrec ? aPrec : bPrec;
   }
 }
