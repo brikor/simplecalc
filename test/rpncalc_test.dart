@@ -71,8 +71,7 @@ void rpncalc_test() {
     //input of 10 sets result to 10
     test('Submit sets result', () {
       calc.formula = "10";
-      ButtonElement btn = shadow.querySelector("#calcbtn") as ButtonElement;
-      btn.click();
+      shadow.querySelector("#calcbtn").click();
       expect(calc.result, equals("10"));
       //expect(shadow.querySelector("#results").text, equals("(Results: 10)"));
     });
@@ -80,8 +79,7 @@ void rpncalc_test() {
     test('Submit Creates Output', () {
       calc.formula = "10";
       return new Future(() {
-        ButtonElement btn = shadow.querySelector("#calcbtn") as ButtonElement;
-        btn.click();
+        shadow.querySelector("#calcbtn").click();
         return new Future(() {
           expect(shadow.querySelector("#results").text, equals("(Result: 10)"));
         });
@@ -92,7 +90,7 @@ void rpncalc_test() {
     test('Blank Submit Outputs blank', () {
       calc.formula = "";
       return new Future(() {
-        (shadow.querySelector("#calcbtn") as ButtonElement).click();
+        shadow.querySelector("#calcbtn").click();
         return new Future(() {
           expect(shadow.querySelector("#results").text, equals("(Result: )"));
         });

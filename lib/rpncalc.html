@@ -16,26 +16,68 @@
   * along with simple calc.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <link rel="import" href="../../packages/polymer/polymer.html">
-
+<link rel="import" href="../../packages/paper_elements/paper_toggle_button.html">
+<link rel="import" href="../../packages/paper_elements/paper_button.html">
+<link rel="import" href="../../packages/core_elements/core_collapse.html">
 <polymer-element name="rpn-calc">
   <template>
     <style>
       div {
         font-size: 18pt;
-        text-align: left;
-        margin-top: 100px;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
       }
       button {
         font-size: 18pt;
         margin-bottom: 20px;
       }
+      #calculator {
+        margin-top: 100px;
+        padding: 10px;
+      }
+      #results {
+        display: none;
+      }
+      #infixLog {
+        display: none;
+      }
+      .heading {
+        padding: 10px;
+        background-color:#f3f3f3;
+        border: 1px solid #dedede;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+      .content {
+        padding: 10px;
+        border: 1px solid #dedede;
+        border-top: none;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
     </style>
-    <div>
-      <span id="formlbl">Enter The formula:</span>
+    <div id="calculator">
+      <span id="inSpan">
+        Infix?
+        <paper-toggle-button id="infix" checked={{infix}}></paper-toggle-button>
+      </span>
+      <br>
+      <span id="formlbl">Enter your formula:</span>
+      <br>
       <textarea rows="10" cols="80" id="formula" value={{formula}}></textarea>
       <br>
-      <button id=calcbtn on-click="{{calculate}}">calculate</button><br>
+      <paper-button raisedButton="true" id="calcbtn" on-click="{{calculate}}" label="Calculate"></paper-button>
+      <br>
       <span id="results">(Result: {{result}})</span>
+    </div>
+    <div id="infixLog">
+      <div class="heading" on-click="{{toggleCollapse}}">
+        Infix Transformation Log
+      </div>
+      <core-collapse id=collapse>
+        <div class="content">{{infixLog}}</div>
+      </core-collapse>
     </div>
   </template>
   <script type="application/dart" src="rpncalc.dart"></script>

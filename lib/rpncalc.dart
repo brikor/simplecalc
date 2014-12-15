@@ -1,4 +1,4 @@
- /**
+/**
   * Copyright (c) 2014 Brian Korbein
   * This file is part of simple calc.
   *
@@ -18,6 +18,8 @@
 library rpn;
 
 import 'package:polymer/polymer.dart';
+import 'package:core_elements/core_collapse.dart';
+import 'dart:html';
 
 part "parser.dart";
 part "calc.dart";
@@ -33,6 +35,8 @@ part "oper/negoper.dart";
 @CustomTag('rpn-calc')
 class RPNCalc extends PolymerElement {
   @published String formula = '';
+  @published bool infix = false; //default to rpn
+  @published String infixLog = '';
   //since we only write to result, it can be just observable i think?
   @observable String result = '';
 
@@ -42,16 +46,29 @@ class RPNCalc extends PolymerElement {
   RPNCalc.created() : super.created() {
     //initialize the parser and calculator so calculate can calculate
     par = new Parser();
-    cal  = new Calc();
   }
-  ///Here we take the user inputted formula, pass it through a chain of methods
+  ///Here we take the user's formula, pass it through a chain of methods
   ///and give the result of the calculation back to the user. Any exceptions
   ///caused by the formula will be caught and displayed to the user here.
   void calculate() {
     try {
-      result = cal.calculate(par.parse(formula));
-    } catch (e){
+      print(infix.toString());
+      result = Calc.calculate(par.parse(formula));
+    } catch (e) {
       result = "Invalid Formula.";
     }
+    //remember to unhide the results, or we've not really done anything useful
+    ShadowRoot shadow = querySelector('rpn-calc').shadowRoot;
+    shadow.querySelector("#results").style.display = "inline";
+    if(infix){
+      shadow.querySelector("#infixLog").style.display = "inline";
+    }
+  }
+  ///Clicking on the will open/close the collapse section. I think I could just
+  ///put this directly in the onclick, but then I'd have to write javascript and
+  ///deal with potential issues from mixing languages, this seems a bit easier.
+  void toggleCollapse(){
+    ShadowRoot shadow = querySelector('rpn-calc').shadowRoot;
+    (shadow.querySelector("#collapse") as CoreCollapse).toggle();
   }
 }
