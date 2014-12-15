@@ -21,51 +21,45 @@ part of rpn_test;
 void calc_test(){
   Calc c = new Calc();
   group('Calc', () {
-      test('Calc can be instantiated', () {
-        expect(c.runtimeType, equals(Calc));
-      });
-      test('Calc can only be instantiated once', () {
-        expect(c, equals(new Calc()));
-      });
       test("Calc.calculate handles empty lists", () {
-        expect(c.calculate([]), equals(""));
+        expect(Calc.calculate([]), equals(""));
       });
       test("Calc.calculate handles lists of empty string", () {
-        expect(c.calculate([["string",""]]), equals(""));
+        expect(Calc.calculate([["string",""]]), equals(""));
       });
       test("Calc.calculate handles lists of single values", () {
-        expect(c.calculate([["num","10"]]), equals("10"));
+        expect(Calc.calculate([["num","10"]]), equals("10"));
       });
       //make sure to wrap calculate in a ()=> since the exception test
       //matchers can't handle methods with args.
       test("Calc.calculate throws on bad data", () {
-        expect(()=>c.calculate([["oper","-"]]), throwsException);
+        expect(()=>Calc.calculate([["oper","-"]]), throwsException);
       });
       //just catch the throw, since there's no good matcher
       test("Calc.calculate throws when you forget an operator", () {
-              expect(()=>c.calculate([["num","10"],["num","10"],["num","10"]]), throws);
+              expect(()=>Calc.calculate([["num","10"],["num","10"],["num","10"]]), throws);
       });
       //just catch the throw, there's no good matcher for no such operator
       test("Calc.calculate throws when you feed a bad operator, } in this case",
-          () { expect(()=>c.calculate([["num","10"],["num","10"],["oper","}"]]), throws);
+          () { expect(()=>Calc.calculate([["num","10"],["num","10"],["oper","}"]]), throws);
       });
 
     });
   //tests for the various operators should go here
   group('Math', (){
     test("Calc.calculate can add", (){
-                expect(c.calculate([["num","10"],["num","10"],["oper","+"]]), equals("20"));
+                expect(Calc.calculate([["num","10"],["num","10"],["oper","+"]]), equals("20"));
     });
     test("Calc.calculate can add strings", (){
-                    expect(c.calculate([["string","\"hello,\""],
+                    expect(Calc.calculate([["string","\"hello,\""],
                                         ["string","\" world!\""],["oper","+"]]),
                                         equals("\"hello, world!\""));
     });
     test("Calc.calculate can negate", (){
-                expect(c.calculate([["num","10"],["oper","neg"]]), equals("-10"));
+                expect(Calc.calculate([["num","10"],["oper","neg"]]), equals("-10"));
     });
     test("Calc.calculate can subtract ", (){
-                expect(c.calculate([["num","10"],["num","19"],["oper","-"]]), equals("-9"));
+                expect(Calc.calculate([["num","10"],["num","19"],["oper","-"]]), equals("-9"));
     });
   });
 }
