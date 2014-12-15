@@ -2,6 +2,8 @@ name: simplecalc
 author: Brian Korbein
 description: A simple rpn calculator
 dependencies:
+  core_elements: any
+  paper_elements: any
   polymer: any
   unittest: any
 transformers:
