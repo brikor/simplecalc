@@ -37,4 +37,22 @@ void parser_test() {
                                          ["oper","neg"],["oper","+"]]));
     });
   });
+  group('Parser, Infix', () {
+      test("Parser handles empty strings", () {
+        expect((new Parser("", true)).tokens, equals([["string",""]]));
+      });
+      test("Parser handles simple strings", (){
+        expect((new Parser("10 + 10", true)).tokens, equals([["num","10"],["num","10"],
+                                           ["oper","+"]]));
+      });
+      test("Parser handles string types", (){
+            expect((new Parser("\"hello,\" + \" world!\"", true)).tokens,
+                equals([["string","\"hello,\""],["string","\" world!\""],
+                                               ["oper","+"]]));
+          });
+      test("Parser.parse handles negative numbers", (){
+        expect((new Parser("-1 + -2", true)).tokens, equals([["num","1"],["oper","neg"],["num","2"],
+                                           ["oper","neg"],["oper","+"]]));
+      });
+    });
 }
