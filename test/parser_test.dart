@@ -19,25 +19,21 @@ part of rpn_test;
 
 //unit test the parser class.
 void parser_test() {
-  group('Parser', () {
-    Parser p = new Parser();
-    test('Parser can be Instantiated', () {
-      expect(p.runtimeType, equals(Parser));
+  group('Parser, RPN', () {
+    test("Parser handles empty strings", () {
+      expect((new Parser("", false)).tokens, equals([["string",""]]));
     });
-    test("Parser.parse handles empty strings", () {
-      expect(p.parse(""), equals([["string",""]]));
-    });
-    test("Parser.parse handles simple strings", (){
-      expect(p.parse("10 10 +"), equals([["num","10"],["num","10"],
+    test("Parser handles simple strings", (){
+      expect((new Parser("10 10 +", false)).tokens, equals([["num","10"],["num","10"],
                                          ["oper","+"]]));
     });
-    test("Parser.parse handles string types", (){
-          expect(p.parse("\"hello,\" \" world!\" +"),
+    test("Parser handles string types", (){
+          expect((new Parser("\"hello,\" \" world!\" +", false)).tokens,
               equals([["string","\"hello,\""],["string","\" world!\""],
                                              ["oper","+"]]));
         });
     test("Parser.parse handles negative numbers", (){
-      expect(p.parse("-1 -2 +"), equals([["num","1"],["oper","neg"],["num","2"],
+      expect((new Parser("-1 -2 +", false)).tokens, equals([["num","1"],["oper","neg"],["num","2"],
                                          ["oper","neg"],["oper","+"]]));
     });
   });

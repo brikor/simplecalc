@@ -22,12 +22,17 @@ part of rpn;
 ///lists [String type,String token]. This type annotation will allow operators,
 ///who will have the type "oper" to support more than just nums. I'm purposely
 ///avoiding using the actual dart types because it saves me needing to define
-///classes for the types that don't exist in dart, like "oper". This will also
-///save us from having to convert everything back into a string later.
+///classes for the types that don't exist in dart, like "oper", although there
+///is an oper class, so that's a bad example. This will also save us from having
+///to convert everything back into a string later. Being able to provide the
+///shunting log to the output page means this class will need to maintain state
+///It's pretty much the only one that does though.
 class Parser {
+  List<List<String>> tokens;
+  String shuntingLog = ""; //this is "" when infix is turned off, or "" is passed in.
   RegExp _reg;
   ///Contruct a new Parser, which pretty much just means construct the regex...
-  Parser() {
+  Parser(String uString, bool infix) {
     //dart regex is supposed to be identical to js regex, and this works for js
     //so it should work here as well.
     //to explain this regex...
@@ -49,6 +54,7 @@ class Parser {
     //in the string being matched against, although invalid constructs are
     //likely to appear one character at a time, so enjoy the strange behavior!
     _reg = new RegExp(r'("(?:[^"\\]|\\.)*"|\d+\.?\d*|\w+|\S)');
+    _parse(uString, infix);
   }
   ///Parse takes a user supplied string and returns a list of lists ofstrings in
   ///RPN order for consumption by the calculator. This list is not validated,
@@ -56,14 +62,19 @@ class Parser {
   ///returned are the annotated tokens, with current types being string, num and
   ///oper. The first element in the annotated lists is the type, the second is
   ///the value (type, value).
-  List<List<String>> parse(String uString) {
-    List<List<String>> rList = new List<List<String>>();
+  void _parse(String uString, bool infix) {
     if(uString.length == 0){
-      rList = [["string",""]]; //create an list to return with a single empty string
+      tokens = [["string",""]]; //create a list to return with a single empty string
     } else {
-    rList = _annotate(_rpnTokenize(uString));
+      if(infix){
+        //Since this is
+        List<String> tempToks = Shunting.infixToRPN(_rpnTokenize(uString));
+        shuntingLog = tempToks.removeLast();
+        tokens = _annotate(tempToks);
+      } else {
+      tokens = _annotate(_rpnTokenize(uString));
+      }
     }
-    return rList;
   }
   //Private method to create the tokens, this should only be called on a string
   //that actually has values...

@@ -37,7 +37,7 @@ part "oper/negoper.dart";
 class RPNCalc extends PolymerElement {
   @published String formula = '';
   @published bool infix = false; //default to rpn
-  @published String infixLog = '';
+  @observable String infixLog = '';
   //since we only write to result, it can be just observable i think?
   @observable String result = '';
 
@@ -45,8 +45,6 @@ class RPNCalc extends PolymerElement {
   Calc cal;
 
   RPNCalc.created() : super.created() {
-    //initialize the parser and calculator so calculate can calculate
-    par = new Parser();
   }
   ///Here we take the user's formula, pass it through a chain of methods
   ///and give the result of the calculation back to the user. Any exceptions
@@ -54,7 +52,7 @@ class RPNCalc extends PolymerElement {
   void calculate() {
     try {
       print(infix.toString());
-      result = Calc.calculate(par.parse(formula));
+      result = Calc.calculate(new Parser(formula, infix).tokens);
     } catch (e) {
       result = "Invalid Formula.";
     }
