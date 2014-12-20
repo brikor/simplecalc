@@ -28,6 +28,7 @@ import "package:simplecalc/rpncalc.dart";
 part "parser_test.dart";
 part "calc_test.dart";
 part "oper_test.dart";
+part "shunting_test.dart";
 
 //use a seperate main method so all test methods can be executed in one main.
 void main() {
@@ -38,6 +39,7 @@ void main() {
     return Polymer.onReady.then((_) {
       rpncalc_test();
       parser_test();
+      shunting_test();
       calc_test();
       oper_test();
     });

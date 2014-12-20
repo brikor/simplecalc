@@ -24,6 +24,7 @@ import 'dart:html';
 part "parser.dart";
 part "calc.dart";
 part "oper.dart";
+part "shunting.dart";
 //I'm stuffing the children of oper into their own subdirectory, so they don't
 //spam the lib root.
 part "oper/plusoper.dart";
