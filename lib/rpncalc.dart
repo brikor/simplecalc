@@ -41,18 +41,16 @@ class RPNCalc extends PolymerElement {
   //since we only write to result, it can be just observable i think?
   @observable String result = '';
 
-  Parser par;
-  Calc cal;
-
   RPNCalc.created() : super.created() {
   }
   ///Here we take the user's formula, pass it through a chain of methods
   ///and give the result of the calculation back to the user. Any exceptions
   ///caused by the formula will be caught and displayed to the user here.
   void calculate() {
+    Parser par;
     try {
-      print(infix.toString());
-      result = Calc.calculate(new Parser(formula, infix).tokens);
+      par =  new Parser(formula, infix);
+      result = Calc.calculate(par.tokens);
     } catch (e) {
       result = "Invalid Formula.";
     }
@@ -60,7 +58,10 @@ class RPNCalc extends PolymerElement {
     ShadowRoot shadow = querySelector('rpn-calc').shadowRoot;
     shadow.querySelector("#results").style.display = "inline";
     if(infix){
+      infixLog = par.shuntingLog;
       shadow.querySelector("#infixLog").style.display = "inline";
+    } else {
+      shadow.querySelector("#infixLog").style.display = "none";
     }
   }
   ///Clicking on the will open/close the collapse section. I think I could just
