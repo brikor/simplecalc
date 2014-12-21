@@ -44,7 +44,6 @@ class Shunting {
           //then we can add swap it with the head of the opStack and give the old
           //head to the rpntoks stack. We also have to make sure we don't accidentily
           //compare against an ( since, that has special handling, stupid infix
-          print(opStack);
           if (opStack.first == "(" ||
               _opTable[opStack.first][0] < _opTable[cur][0]) {
             opStack.insert(0, cur);
@@ -77,7 +76,6 @@ class Shunting {
     //throw them onto the tail of the rpnToks stack
     rpnToks.addAll(opStack);
     log.writeAll(rpnToks, " "); //log the final rpnstack to show the user.
-    print(log);
     rpnToks.add(log.toString());
     return rpnToks;
   }
