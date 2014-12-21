@@ -31,7 +31,11 @@ void parser_test() {
           expect((new Parser("\"hello,\" \" world!\" +", false)).tokens,
               equals([["string","\"hello,\""],["string","\" world!\""],
                                              ["oper","+"]]));
-        });
+    });
+    test("Parser handles string with - in them", (){
+              expect((new Parser("\"3-3\"", false)).tokens,
+                  equals([["string","\"3-3\""]]));
+    });
     test("Parser.parse handles negative numbers", (){
       expect((new Parser("-1 -2 +", false)).tokens, equals([["num","1"],["oper","neg"],["num","2"],
                                          ["oper","neg"],["oper","+"]]));
@@ -49,7 +53,11 @@ void parser_test() {
             expect((new Parser("\"hello,\" + \" world!\"", true)).tokens,
                 equals([["string","\"hello,\""],["string","\" world!\""],
                                                ["oper","+"]]));
-          });
+      });
+      test("Parser handles string with - in them", (){
+                    expect((new Parser("\"3-3\"", false)).tokens,
+                        equals([["string","\"3-3\""]]));
+      });
       test("Parser.parse handles negative numbers", (){
         expect((new Parser("-1 + -2", true)).tokens, equals([["num","1"],["oper","neg"],["num","2"],
                                            ["oper","neg"],["oper","+"]]));

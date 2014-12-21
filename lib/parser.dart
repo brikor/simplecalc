@@ -29,8 +29,10 @@ part of rpn;
 ///It's pretty much the only one that does though.
 class Parser {
   List<List<String>> tokens;
-  String shuntingLog = ""; //this is "" when infix is turned off, or "" is passed in.
+  String shuntingLog =
+      ""; //this is "" when infix is turned off, or "" is passed in.
   RegExp _reg;
+  bool _infix;
   ///Contruct a new Parser, which pretty much just means construct the regex...
   Parser(String uString, bool infix) {
     //dart regex is supposed to be identical to js regex, and this works for js
@@ -40,7 +42,7 @@ class Parser {
     //types current regex or'd inside. The first regex is to match quoted
     //strings: "(?:[^"\\]|\\.)*" The double quotes at the start and end
     //signify the requirement to wrap all strings in quotes. Within the quotes
-    //is a positive lookahead construct which has two sub regexes inside it
+    //is a non-capturing construct which has two sub regexes inside it
     //the first regex means roughly match anything that's not a double quote or
     //a backslash, the second says match any character (including double quote)
     //that is preceded by a backslash. This group can be repeated 0 or more
@@ -54,7 +56,8 @@ class Parser {
     //in the string being matched against, although invalid constructs are
     //likely to appear one character at a time, so enjoy the strange behavior!
     _reg = new RegExp(r'("(?:[^"\\]|\\.)*"|\d+\.?\d*|\w+|\S)');
-    _parse(uString, infix);
+    _infix = infix;
+    _parse(uString);
   }
   ///Parse takes a user supplied string and returns a list of lists ofstrings in
   ///RPN order for consumption by the calculator. This list is not validated,
@@ -62,17 +65,18 @@ class Parser {
   ///returned are the annotated tokens, with current types being string, num and
   ///oper. The first element in the annotated lists is the type, the second is
   ///the value (type, value).
-  void _parse(String uString, bool infix) {
-    if(uString.length == 0){
-      tokens = [["string",""]]; //create a list to return with a single empty string
+  void _parse(String uString) {
+    if (uString.length == 0) {
+      tokens =
+          [["string", ""]]; //create a list to return with a single empty string
     } else {
-      if(infix){
+      if (_infix) {
         //Since this is
         List<String> tempToks = Shunting.infixToRPN(_rpnTokenize(uString));
         shuntingLog = tempToks.removeLast();
         tokens = _annotate(tempToks);
       } else {
-      tokens = _annotate(_rpnTokenize(uString));
+        tokens = _annotate(_rpnTokenize(uString));
       }
     }
   }
@@ -93,15 +97,52 @@ class Parser {
   }
   //Private method to remove syntactic sugar, like inline negation
   String _deSugar(String uString) {
-    //turn inline negation into <number> neg
-    return uString.replaceAllMapped(
-        new RegExp(r'(-)(\d+)'),
-        (Match m) => "${m[2]} neg");
+    //turn inline negation into <number> neg or neg <number, depending on
+    //[_infix], which is annoying, but unavoidable as far as I can see. For
+    //simplicity I'm doing this in multiple passes for infix, which makes it
+    //terrible performance wise.
+    if (_infix) {
+      //if infix, things are going to get ugly, but we start simply enough
+      uString = uString.replaceFirst(new RegExp(r'^-'), 'neg ');
+      //This one's a bit more fun! 4 matching groups here, the first is
+      //the usual quoted string one, then we 'or', then we see if there's
+      //a symbol, like +, or (, or '-', etc, possibly followed by whitespace,
+      //followed by a -, that last - should be a negation, or a syntax error,
+      //either way it's a negation now. we don't actually care what comes last
+      //Come to think of it, this could be done in shunting, but then we'd
+      //have to peak right every time we found an operator, and do magic if it's
+      //a - and not a digit or some other symbol.
+      RegExp inf = new RegExp(r'("(?:[^"\\]|\\.)*")|([\(\-\+\^\*\/]\s*)(-)');
+      return uString.replaceAllMapped(inf, (Match m) {
+        //if there are 3 matchs, then this is a negation, if there is 1
+        //it's a string, strings get returned unmodified, negations get
+        //fixed.
+        if (m[2] != null) {
+          return "${m[2]} neg ";
+        } else {
+          return m[0];
+        }
+      });
+
+    } else {
+      return uString.replaceAllMapped(
+          new RegExp(r'("(?:[^"\\]|\\.)*")|(-)(\d+)'),
+          (Match m) {
+        //if there are 3 matchs, then this is a negation, if there is 1
+        //it's a string, strings get returned unmodified, negations get
+        //fixed.
+        if (m[2] != null) {
+          return " ${m[3]} neg";
+        } else {
+          return m[0];
+        }
+      });
+    }
   }
   //this is a fun type... list of list of strings, since dart doesn't support
   //tuple yet. the first inner list item will be the type, the second the token
   //aka (type, token)
-  List<List<String>> _annotate(List<String> toks){
+  List<List<String>> _annotate(List<String> toks) {
     //to make this work we're going to run the toks against an if-chain
     //that will annotate the token, and append it to the annoted list. The order
     //of the types here is potentially important, as  certain types can be
@@ -117,25 +158,25 @@ class Parser {
 
 
     //These are all going to look basically the same
-    toks.forEach((t){
-      if(_isType(str, t)){
+    toks.forEach((t) {
+      if (_isType(str, t)) {
         tated.add(["string", t]);
-      } else if(_isType(nummy, t)){
+      } else if (_isType(nummy, t)) {
         tated.add(["num", t]);
-      } else if(_isType(oper, t)){
+      } else if (_isType(oper, t)) {
         tated.add(["oper", t]);
       } else {
-        throw new Exception("Something went terribly wrong in the annotator."
-            " Current token is: $t");
+        throw new Exception(
+            "Something went terribly wrong in the annotator." " Current token is: $t");
       }
     });
     return tated;
   }
   //Decide whether the given token is of the type defined by the given regex
-  bool _isType(RegExp type, String token){
+  bool _isType(RegExp type, String token) {
     //if we define the type regex correctly then the first match should be equal
     //to the given token
-    if(type.firstMatch(token) == null){
+    if (type.firstMatch(token) == null) {
       return false;
     } else {
       return type.firstMatch(token).group(0) == token;
